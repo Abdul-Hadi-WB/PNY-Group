@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function Home() {
+  const [submitted, setSubmitted] = useState(false);
+  
   useEffect(() => {
     // Initialize AOS with smooth settings
     AOS.init({
@@ -887,12 +889,13 @@ function Home() {
 
       {/* ==================== CONTACT US SECTION ==================== */}
       <section className="py-20 px-4 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+        {/* Background Glow */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-[#3da9ec]/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#ff6b6b]/10 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto max-w-4xl relative z-10">
-          {/* Section Title */}
-          <div 
+          {/* ================= TITLE ================= */}
+          <div
             data-aos="fade-down"
             data-aos-duration="800"
             className="text-center mb-12 relative"
@@ -903,16 +906,14 @@ function Home() {
                 <div className="w-1/2 h-1 bg-[#3da9ec]"></div>
                 <div className="w-1/2 h-1 bg-[#ff6b6b]"></div>
               </div>
-              <div className="absolute -left-4 top-1/2 w-2 h-2 bg-[#3da9ec] rounded-full"></div>
-              <div className="absolute -right-4 top-1/2 w-2 h-2 bg-[#ff6b6b] rounded-full"></div>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Get in touch with us for any queries or information. We'd love to hear from you!
+              Get in touch with us for any queries or information.
             </p>
           </div>
 
-          {/* Contact Form */}
-          <div 
+          {/* ================= FORM CARD ================= */}
+          <div
             data-aos="fade-up"
             data-aos-duration="1000"
             className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border border-gray-100 relative overflow-hidden"
@@ -921,123 +922,108 @@ function Home() {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-[#ff6b6b]/5 to-transparent rounded-tr-full"></div>
 
             <div className="relative z-10">
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              {!submitted ? (
+                <form
+                  className="space-y-6"
+                  action="https://formsubmit.co/info@pnygroup.com"
+                  method="POST"
+                  onSubmit={() => setSubmitted(true)}
+                >
+                  <input type="hidden" name="_captcha" value="false" /> {/* disable captcha */}
+                  <input type="hidden" name="_subject" value="New Contact Form Submission" />
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Your Name
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter your full name"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3da9ec] transition-all duration-300"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-2">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-                      Your Name
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Subject
                     </label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
-                      placeholder="Enter your full name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3da9ec] focus:border-transparent transition-all duration-300 bg-white"
+                      name="subject"
+                      placeholder="What is this regarding?"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-300"
                       required
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-                      Email Address
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Your Message
                     </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="Enter your email address"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent transition-all duration-300 bg-white"
+                    <textarea
+                      name="message"
+                      rows="6"
+                      placeholder="Type your message here..."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 resize-none"
                       required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    placeholder="What is this regarding?"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent transition-all duration-300 bg-white"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows="6"
-                    placeholder="Type your message here..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffe66d] focus:border-transparent transition-all duration-300 resize-none bg-white"
-                    required
-                  ></textarea>
-                </div>
-
-                <div className="text-center pt-4">
-                  <button
-                    type="submit"
-                    className="relative group px-10 py-4 bg-gradient-to-r from-[#3da9ec] to-[#ff6b6b] text-white font-semibold rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-                  >
-                    <span className="relative z-10">Send Message</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#ff6b6b] to-[#3da9ec] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </button>
-                </div>
-              </form>
-
-              {/* Contact Info */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <div className="grid md:grid-cols-3 gap-6 text-center">
-                  <div 
-                    data-aos="fade-up"
-                    data-aos-delay="100"
-                    className="relative group"
-                  >
-                    <div className="w-14 h-14 bg-[#3da9ec]/10 rounded-xl flex items-center justify-center mx-auto mb-3 relative">
-                      <svg className="w-7 h-7 text-[#3da9ec]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                    </div>
-                    <h4 className="font-semibold text-gray-900">Phone</h4>
-                    <p className="text-gray-600">+92 304 1111774</p>
+                    ></textarea>
                   </div>
 
-                  <div 
-                    data-aos="fade-up"
-                    data-aos-delay="200"
-                    className="relative group"
-                  >
-                    <div className="w-14 h-14 bg-[#ff6b6b]/10 rounded-xl flex items-center justify-center mx-auto mb-3 relative">
-                      <svg className="w-7 h-7 text-[#ff6b6b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <h4 className="font-semibold text-gray-900">Email</h4>
-                    <p className="text-gray-600">info@pnygroup.com</p>
+                  <div className="text-center pt-4">
+                    <button
+                      type="submit"
+                      className="relative group px-10 py-4 bg-gradient-to-r from-[#3da9ec] to-[#ff6b6b] text-white font-semibold rounded-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                    >
+                      <span className="relative z-10">Send Message</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#ff6b6b] to-[#3da9ec] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                /* ================= SUCCESS SCREEN ================= */
+                <div className="flex flex-col items-center justify-center text-center py-24 animate-[successPop_0.7s_ease-out_forwards]">
+                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-[0_20px_60px_rgba(16,185,129,0.5)]">
+                    <svg
+                      className="w-14 h-14 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                   </div>
 
-                  <div 
-                    data-aos="fade-up"
-                    data-aos-delay="300"
-                    className="relative group"
-                  >
-                    <div className="w-14 h-14 bg-[#4ecdc4]/10 rounded-xl flex items-center justify-center mx-auto mb-3 relative">
-                      <svg className="w-7 h-7 text-[#4ecdc4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <h4 className="font-semibold text-gray-900">Address</h4>
-                    <p className="text-gray-600">Office # 1, Level # 14, Arfa Software Technology Park, Ferozpur Road Lahore, Pakistan.</p>
-                  </div>
+                  <h3 className="text-3xl font-bold text-green-600 mt-8">
+                    Message Sent Successfully!
+                  </h3>
+
+                  <p className="text-gray-600 mt-3 max-w-md">
+                    Thank you for contacting us. Our team will respond you shortly.
+                  </p>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
