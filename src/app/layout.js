@@ -1,17 +1,18 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";           // درست نام
-// import "./Style";              // صرف تب ہی رکھیں اگر Style.js موجود ہے
+import { Geist } from "next/font/google";
+import { Cinzel } from "next/font/google";
+import "./globals.css";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const headingFont = Cinzel({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bodyFont = Geist({
   subsets: ["latin"],
+  variable: "--font-body",
 });
 
 export const metadata = {
@@ -22,9 +23,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${headingFont.variable} ${bodyFont.variable} antialiased`}>
         <Navbar />
         {children}
         <Footer />

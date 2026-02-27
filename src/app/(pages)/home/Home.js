@@ -1,11 +1,43 @@
 "use client";
 
+
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function Home() {
   const [submitted, setSubmitted] = useState(false);
+  
+  // 5 seconds timer for success message
+  useEffect(() => {
+    let timer;
+    if (submitted) {
+      timer = setTimeout(() => {
+        setSubmitted(false);
+      }, 5000); // 5 seconds
+    }
+    return () => clearTimeout(timer);
+  }, [submitted]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+    })
+    .then(response => {
+      if (response.ok) {
+        setSubmitted(true);
+        form.reset();
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Something went wrong. Please try again.');
+    });
+  };
   
   useEffect(() => {
     // Initialize AOS with smooth settings
@@ -887,8 +919,7 @@ function Home() {
         </a>
       </div>
 
-      {/* ==================== CONTACT US SECTION ==================== */}
-      <section className="py-20 px-4 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+       <section className="py-20 px-4 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
         {/* Background Glow */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-[#3da9ec]/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#ff6b6b]/10 rounded-full blur-3xl"></div>
@@ -927,10 +958,11 @@ function Home() {
                   className="space-y-6"
                   action="https://formsubmit.co/info@pnygroup.com"
                   method="POST"
-                  onSubmit={() => setSubmitted(true)}
+                  onSubmit={handleSubmit}
                 >
-                  <input type="hidden" name="_captcha" value="false" /> {/* disable captcha */}
+                  <input type="hidden" name="_captcha" value="false" />
                   <input type="hidden" name="_subject" value="New Contact Form Submission" />
+                  <input type="hidden" name="_next" value={window.location.href} />
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
@@ -1020,8 +1052,9 @@ function Home() {
                   </h3>
 
                   <p className="text-gray-600 mt-3 max-w-md">
-                    Thank you for contacting us. Our team will respond you shortly.
+                    Thank you for contacting us. Our team will respond to you shortly.
                   </p>
+                  
                 </div>
               )}
             </div>
