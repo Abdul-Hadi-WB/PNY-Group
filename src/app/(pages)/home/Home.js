@@ -1,45 +1,32 @@
 "use client";
 
-
 import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function Home() {
   const [submitted, setSubmitted] = useState(false);
-  
+  const [isClient, setIsClient] = useState(false);
+
+  // Client-side check
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // 5 seconds timer for success message
   useEffect(() => {
     let timer;
     if (submitted) {
       timer = setTimeout(() => {
         setSubmitted(false);
-      }, 5000); // 5 seconds
+      }, 5000);
     }
     return () => clearTimeout(timer);
   }, [submitted]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    
-    fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-    })
-    .then(response => {
-      if (response.ok) {
-        setSubmitted(true);
-        form.reset();
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Something went wrong. Please try again.');
-    });
-  };
-  
   useEffect(() => {
+    if (!isClient) return;
+
     // Initialize AOS with smooth settings
     AOS.init({
       duration: 1000,
@@ -61,7 +48,39 @@ function Home() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isClient]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+    })
+    .then(response => {
+      if (response.ok) {
+        setSubmitted(true);
+        form.reset();
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Something went wrong. Please try again.');
+    });
+  };
+
+  // Agar client-side nahi hai to loading show karo
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-50">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#3da9ec] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const allImages = [
     { 
@@ -919,7 +938,8 @@ function Home() {
         </a>
       </div>
 
-       <section className="py-20 px-4 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+      {/* ==================== CONTACT SECTION ==================== */}
+      <section className="py-20 px-4 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
         {/* Background Glow */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-[#3da9ec]/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#ff6b6b]/10 rounded-full blur-3xl"></div>
@@ -962,7 +982,8 @@ function Home() {
                 >
                   <input type="hidden" name="_captcha" value="false" />
                   <input type="hidden" name="_subject" value="New Contact Form Submission" />
-                  <input type="hidden" name="_next" value={window.location.href} />
+                  {/* FIXED: window.location.href ki jagah relative URL */}
+                  <input type="hidden" name="_next" value="/" />
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
@@ -1030,7 +1051,7 @@ function Home() {
                 </form>
               ) : (
                 /* ================= SUCCESS SCREEN ================= */
-                <div className="flex flex-col items-center justify-center text-center py-24 animate-[successPop_0.7s_ease-out_forwards]">
+                <div className="flex flex-col items-center justify-center text-center py-24">
                   <div className="w-28 h-28 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-[0_20px_60px_rgba(16,185,129,0.5)]">
                     <svg
                       className="w-14 h-14 text-white"
@@ -1054,7 +1075,6 @@ function Home() {
                   <p className="text-gray-600 mt-3 max-w-md">
                     Thank you for contacting us. Our team will respond to you shortly.
                   </p>
-                  
                 </div>
               )}
             </div>

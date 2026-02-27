@@ -6,8 +6,16 @@ import "aos/dist/aos.css";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Client-side check
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
+    if (!isClient) return;
+
     AOS.init({
       duration: 1000,
       easing: "ease-in-out",
@@ -21,7 +29,7 @@ const Contact = () => {
     const handleResize = () => AOS.refresh();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isClient]);
 
   // Effect to handle auto-hide after 5 seconds
   useEffect(() => {
@@ -29,16 +37,15 @@ const Contact = () => {
     if (submitted) {
       timer = setTimeout(() => {
         setSubmitted(false);
-      }, 5000); // 5 seconds
+      }, 5000);
     }
     return () => clearTimeout(timer);
   }, [submitted]);
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     const form = e.target;
     
-    // Submit form using fetch API
     fetch(form.action, {
       method: 'POST',
       body: new FormData(form),
@@ -46,7 +53,7 @@ const Contact = () => {
     .then(response => {
       if (response.ok) {
         setSubmitted(true);
-        form.reset(); // Optional: Reset form fields
+        form.reset();
       }
     })
     .catch(error => {
@@ -54,6 +61,18 @@ const Contact = () => {
       alert('Something went wrong. Please try again.');
     });
   };
+
+  // Agar client-side nahi hai to loading show karo
+  if (!isClient) {
+    return (
+      <section className="py-20 px-4 bg-gradient-to-br from-white to-gray-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#3da9ec] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <div>
@@ -100,7 +119,8 @@ const Contact = () => {
                 >
                   <input type="hidden" name="_captcha" value="false" />
                   <input type="hidden" name="_subject" value="New Contact Form Submission" />
-                  <input type="hidden" name="_next" value={window.location.href} />
+                  {/* Fixed: window.location.href ki jagah relative URL */}
+                  <input type="hidden" name="_next" value="/contact" />
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
@@ -192,13 +212,29 @@ const Contact = () => {
                   <p className="text-gray-600 mt-3 max-w-md">
                     Thank you for contacting us. Our team will respond to you shortly.
                   </p>
-                  
                 </div>
               )}
             </div>
           </div>
         </div>
       </section>
+
+      {/* Add animation styles */}
+      <style jsx>{`
+        @keyframes successPop {
+          0% {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 };
