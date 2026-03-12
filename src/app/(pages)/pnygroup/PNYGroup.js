@@ -44,7 +44,7 @@ const allImages = [
       description: "PNY Advertising is an advertising company that offers various services of digital media marketing in affordable rates. The main motive behind the company is to grow small business and make an impact within society."
     },
     { 
-      img: "/images/65318304_381653319154375_8905552656043343872_n (1).png", 
+      img: "/images/65318304_381653319154375_8905552656043343872_n.png", 
       alt: "PNY Trainings 2",
       title: "PITAA",
       description: "PITA is Pakistan information technology academic association, where different IT tech companies meet and exchange offers. This is a forum where different IT companies arrange different seminars and free workshops."
